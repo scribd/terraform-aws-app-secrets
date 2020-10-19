@@ -32,6 +32,18 @@ pipeline {
     }
 
     stages {
+        stage('skip:build') {
+            steps {
+                // Skips a build if a commit message contains "[skip ci]"
+                scmSkip(deleteBuild: true, skipPattern: '.*\\[skip ci\\].*')
+            }
+
+            post {
+                failure { updateGitlabCommitStatus(name: 'build:skip', state: 'failed') }
+                success { updateGitlabCommitStatus(name: 'build:skip', state: 'success') }
+            }
+        }
+
         stage('init') {
             steps {
                 sh("terraform init -input=false")
@@ -62,6 +74,35 @@ pipeline {
             post {
                 failure { updateGitlabCommitStatus(name: 'terraform:validate', state: 'failed') }
                 success { updateGitlabCommitStatus(name: 'terraform:validate', state: 'success') }
+            }
+        }
+
+        stage('release') {
+            when {
+                beforeInput(true)
+                beforeAgent(true)
+
+                branch 'main'
+            }
+
+            agent {
+                kubernetes {
+                    label 'semantic-release'
+                    defaultContainer 'semantic-release'
+                }
+            }
+
+            input {
+                message "Hereby I confirm I want to release a new version"
+            }
+
+            steps {
+                sh('npx semantic-release')
+            }
+
+            post {
+                failure { updateGitlabCommitStatus(name: 'terraform:release', state: 'failed') }
+                success { updateGitlabCommitStatus(name: 'terraform:release', state: 'success') }
             }
         }
     }
