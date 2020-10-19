@@ -9,6 +9,7 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 * [Example usage](#example-usage)
 * [Inputs](#inputs)
 * [Outputs](#outputs)
+* [Release](#release)
 * [Maintainers](#maintainers)
 
 ## Prerequisites
@@ -20,7 +21,7 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 
 ```hcl
 module "secrets" {
-  source = "git::ssh://git@git.lo/terraform/terraform-aws-secrets.git?ref=master"
+  source = "git::ssh://git@git.lo/terraform/terraform-aws-secrets.git?ref=main"
 
   app_name = "go-chassis"
   secrets = {
@@ -44,7 +45,7 @@ module "secrets" {
 >>>
 ⚠️ **IMPORTANT NOTES**
 
-* Please don't use `ref=master` in your production code. Please refer to a release tag explicitly.
+* Please don't use `ref=main` in your production code. Please refer to a release tag explicitly.
 * Please don't put actual secret values to the terraform code except for the static configuration values (for instance, the static ports). Use any dummy values to provision the secrets. The actual values have to be set manually via [AWS Web Console](https://aws.amazon.com/secrets-manager/) or [AWS CLI](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/secretsmanager/index.html) afterwards.
 >>>
 
@@ -61,6 +62,25 @@ module "secrets" {
 | Name | Description                              | Sensitive |
 | ---- | ---------------------------------------- | --------- |
 | all  | Map of names and arns of created secrets | no        |
+
+## Release
+
+This project is using [semantic-release](https://semantic-release.gitbook.io/semantic-release/)
+and [conventional-commits](https://www.conventionalcommits.org/en/v1.0.0/),
+with the [`angular` preset](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular).
+
+Releases are done from the `origin/main` branch using a manual step at the end of the CI/CD pipeline.
+
+In order to create a new release:
+
+1. Merge / push changes to `origin/main`
+2. Open the `origin/main` [Jenkins CI/CD pipeline](https://jenkins.kube-charlie.lo/blue/organizations/jenkins/Terraform%2Fterraform%252Fterraform-aws-secrets/activity/?branch=main)
+3. Click "Proceed" button on the release step
+
+A version bump will happen automatically and the type of version bump
+(patch, minor, major) depends on the commits introduced since the last release.
+
+The `semantic-release` configuration is in [`.releaserc.yml`](https://git.lo/terraform/terraform-aws-secrets/blob/main/.releaserc.yml).
 
 ## Maintainers
 
