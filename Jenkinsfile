@@ -11,12 +11,7 @@ pipeline {
     options {
         ansiColor('xterm')
         timeout(30)
-        gitLabConnection('GitLab')
         buildDiscarder logRotator(numToKeepStr: '128')
-    }
-
-    triggers {
-        gitlab(triggerOnPush: true, triggerOnMergeRequest: true, branchFilterType: 'All')
     }
 
     environment {
@@ -27,8 +22,6 @@ pipeline {
         //
         // https://github.com/hashicorp/terraform/issues/21408#issuecomment-495746582
         AWS_DEFAULT_REGION = 'us-east-2'
-
-        GITLAB_TOKEN = credentials('tf-scribdbot-gitlab-token')
     }
 
     stages {
@@ -37,21 +30,11 @@ pipeline {
                 // Skips a build if a commit message contains "[skip ci]"
                 scmSkip(deleteBuild: true, skipPattern: '.*\\[skip ci\\].*')
             }
-
-            post {
-                failure { updateGitlabCommitStatus(name: 'build:skip', state: 'failed') }
-                success { updateGitlabCommitStatus(name: 'build:skip', state: 'success') }
-            }
         }
 
         stage('init') {
             steps {
                 sh("terraform init -input=false")
-            }
-
-            post {
-                failure { updateGitlabCommitStatus(name: 'terraform:init', state: 'failed') }
-                success { updateGitlabCommitStatus(name: 'terraform:init', state: 'success') }
             }
         }
 
@@ -59,21 +42,11 @@ pipeline {
             steps {
                 sh('terraform fmt -check -diff -recursive')
             }
-
-            post {
-                failure { updateGitlabCommitStatus(name: 'terraform:check:format', state: 'failed') }
-                success { updateGitlabCommitStatus(name: 'terraform:check:format', state: 'success') }
-            }
         }
 
         stage('validate') {
             steps {
                 sh('terraform validate')
-            }
-
-            post {
-                failure { updateGitlabCommitStatus(name: 'terraform:validate', state: 'failed') }
-                success { updateGitlabCommitStatus(name: 'terraform:validate', state: 'success') }
             }
         }
 
@@ -98,11 +71,6 @@ pipeline {
 
             steps {
                 sh('npx semantic-release')
-            }
-
-            post {
-                failure { updateGitlabCommitStatus(name: 'terraform:release', state: 'failed') }
-                success { updateGitlabCommitStatus(name: 'terraform:release', state: 'success') }
             }
         }
     }
