@@ -1,4 +1,4 @@
-# terraform-aws-secrets
+# terraform-aws-app-secrets
 
 A module to create application secrets stored in [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/).
 
@@ -21,7 +21,7 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 
 ```hcl
 module "secrets" {
-  source = "git::ssh://git@git.lo/terraform/terraform-aws-secrets.git?ref=main"
+  source = "git::ssh://git@github.com/scribdterraform-aws-app-secrets.git?ref=main"
 
   app_name = "go-chassis"
   secrets = {
@@ -74,13 +74,13 @@ Releases are done from the `origin/main` branch using a manual step at the end o
 In order to create a new release:
 
 1. Merge / push changes to `origin/main`
-2. Open the `origin/main` [Jenkins CI/CD pipeline](https://jenkins.kube-charlie.lo/blue/organizations/jenkins/Terraform%2Fterraform%252Fterraform-aws-secrets/activity/?branch=main)
+2. Open the `origin/main` [Jenkins CI/CD pipeline](https://jenkins.private.scribd.com/job/Service%20Foundations/job/terraform-aws-app-secrets/job/main/)
 3. Click "Proceed" button on the release step
 
 A version bump will happen automatically and the type of version bump
 (patch, minor, major) depends on the commits introduced since the last release.
 
-The `semantic-release` configuration is in [`.releaserc.yml`](https://git.lo/terraform/terraform-aws-secrets/blob/main/.releaserc.yml).
+The `semantic-release` configuration is in [`.releaserc.yml`](https://github.com/scribd/terraform-aws-app-secrets/blob/main/.releaserc.yml).
 
 ## Maintainers
 
