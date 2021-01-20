@@ -22,6 +22,8 @@ pipeline {
         //
         // https://github.com/hashicorp/terraform/issues/21408#issuecomment-495746582
         AWS_DEFAULT_REGION = 'us-east-2'
+
+        GITHUB_TOKEN = credentials('scribdbot-github-token')
     }
 
     stages {
