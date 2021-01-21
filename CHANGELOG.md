@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/scribd/terraform-aws-app-secrets/compare/v1.0.0...v1.0.1) (2021-01-21)
+
+
+### Bug Fixes
+
+* Relax version constraints for the AWS provider ([10f0c4a](https://github.com/scribd/terraform-aws-app-secrets/commit/10f0c4abdbbea08d369c2717e7294d7f0e998c73))
+
 # 1.0.0 (2020-10-19)
 
 
