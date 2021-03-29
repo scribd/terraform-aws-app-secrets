@@ -3,8 +3,8 @@
 pipeline {
     agent {
         kubernetes {
-            label 'terraform-0-12-20'
-            defaultContainer 'terraform-0-12-20'
+            label 'terraform-0-13-1'
+            defaultContainer 'terraform-0-13-1'
         }
     }
 
