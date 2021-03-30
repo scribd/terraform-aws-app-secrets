@@ -14,14 +14,14 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 
 ## Prerequisites
 
-* [Terraform](https://www.terraform.io/downloads.html) (version `0.12.9` or higher)
+* [Terraform](https://www.terraform.io/downloads.html) (version `0.12.20` or higher)
 * [AWS provider](https://www.terraform.io/docs/providers/aws/) (version `2.60` or higher)
 
 ## Example usage
 
 ```hcl
 module "secrets" {
-  source = "git::ssh://git@github.com/scribdterraform-aws-app-secrets.git?ref=main"
+  source = "git::ssh://git@github.com/scribd/terraform-aws-app-secrets.git?ref=main"
 
   app_name = "go-chassis"
   secrets = {
@@ -42,12 +42,10 @@ module "secrets" {
 }
 ```
 
->>>
-⚠️ **IMPORTANT NOTES**
-
-* Please don't use `ref=main` in your production code. Please refer to a release tag explicitly.
-* Please don't put actual secret values to the terraform code except for the static configuration values (for instance, the static ports). Use any dummy values to provision the secrets. The actual values have to be set manually via [AWS Web Console](https://aws.amazon.com/secrets-manager/) or [AWS CLI](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/secretsmanager/index.html) afterwards.
->>>
+> ⚠️ **IMPORTANT NOTES**
+>
+> * Please don't use `ref=main` in your production code. Please refer to a release tag explicitly.
+> * Please don't put actual secret values to the terraform code except for the static configuration values (for instance, the static ports). Use any dummy values to provision the secrets. The actual values have to be set manually via [AWS Web Console](https://aws.amazon.com/secrets-manager/) or [AWS CLI](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/secretsmanager/index.html) afterwards.
 
 ## Inputs
 
@@ -84,4 +82,4 @@ The `semantic-release` configuration is in [`.releaserc.yml`](https://github.com
 
 ## Maintainers
 
-Made with ❤️  by the Service Foundations team.
+Made with ❤️ by the Service Foundations team.
