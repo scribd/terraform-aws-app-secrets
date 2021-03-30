@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v1.0.1...v1.1.0) (2021-03-30)
+
+
+### Features
+
+* Make the module compatible with terraform 0.13 ([a5b1ab5](https://github.com/scribd/terraform-aws-app-secrets/commit/a5b1ab58e906906ce8c8fb09e7912e78ab37d778))
+
 ## [1.0.1](https://github.com/scribd/terraform-aws-app-secrets/compare/v1.0.0...v1.0.1) (2021-01-21)
 
 
