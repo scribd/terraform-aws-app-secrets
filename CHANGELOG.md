@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v1.1.0...v2.0.0) (2021-10-13)
+
+
+### Features
+
+* Support policies for secrets ([124d452](https://github.com/scribd/terraform-aws-app-secrets/commit/124d452f9b851426b330c8cc8efa33cb0bd8d2c3))
+
+
+### BREAKING CHANGES
+
+* Input format for the secrets has changed
+
 # [1.1.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v1.0.1...v1.1.0) (2021-03-30)
 
 
