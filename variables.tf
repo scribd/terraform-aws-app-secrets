@@ -3,9 +3,22 @@ variable "app_name" {
   type        = string
 }
 
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+
+  default = "us-east-2"
+}
+
 variable "secrets" {
-  description = "Key-value map of secrets"
-  type        = map(string)
+  description = "List of objects of secrets"
+  type = list(
+    object({
+      name         = string
+      value        = string
+      allowed_arns = list(string)
+    })
+  )
 }
 
 variable "tags" {

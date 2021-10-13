@@ -8,6 +8,7 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 * [Prerequisites](#prerequisites)
 * [Example usage](#example-usage)
 * [Inputs](#inputs)
+  * [Secrets](#secrets)
 * [Outputs](#outputs)
 * [Release](#release)
 * [Maintainers](#maintainers)
@@ -24,15 +25,43 @@ module "secrets" {
   source = "git::ssh://git@github.com/scribd/terraform-aws-app-secrets.git?ref=main"
 
   app_name = "go-chassis"
-  secrets = {
-    "app-env"               = "development"
-    "app-settings-name"     = "go-chassis"
-    "app-database-host"     = "[value required]"
-    "app-database-port"     = "3306"
-    "app-database-name"     = "[value required]"
-    "app-database-username" = "[value required]"
-    "app-database-password" = "[value required]"
-  }
+  secrets = [
+    {
+      name         = "app-env"
+      value        = "development"
+      allowed_arns = []
+    },
+    {
+      name         = "app-settings-name"
+      value        = "go-chassis"
+      allowed_arns = []
+    },
+    {
+      name        = "app-database-host"
+      value       = "[value required]"
+      allowed_arn = ["arn:aws:iam::1234567890:role/theirRole"]
+    },
+    {
+      name         = "app-database-port"
+      value        = "3306"
+      allowed_arns = []
+    },
+    {
+      name         = "app-database-username"
+      value        = "[value required]"
+      allowed_arns = []
+    },
+    {
+      name         = "app-database-password"
+      value        = "[value required]"
+      allowed_arns = []
+    },
+    {
+      name         = "app-database-name"
+      value        = "[value required]"
+      allowed_arns = []
+    }
+  ]
 
   tags = {
     department = "engineering"
@@ -49,11 +78,20 @@ module "secrets" {
 
 ## Inputs
 
-| Name        | Description              | Type        | Default | Required  |
-| ----------- | ------------------------ | ----------- | ------- | :-------: |
-| app_name    | Application name         | string      | `null`  | yes       |
-| secrets     | Key-value map of secrets | map(string) | `null`  | yes       |
-| tags        | Key-value map of tags    | map(string) | `{}`    | no        |
+| Name         | Description                            | Type         | Default     | Required  |
+| ------------ | -------------------------------------- | ------------ | ----------- | --------- |
+| `app_name`   | Application name                       | string       | `null`      | yes       |
+| `aws_region` | AWS region                             | string       | `us-east-2` | no        |
+| `secrets`    | List of objects of [secrets](#secrets) | list(object) | `null`      | yes       |
+| `tags`       | Key-value map of tags                  | map(string)  | `{}`        | no        |
+
+### Secrets
+
+| Name           | Description                                           | Type   | Default |
+| -------------- | ----------------------------------------------------- | ------ | ------- |
+| `name`         | Secret name                                           | string | `null`  |
+| `value`        | Secret value                                          | string | `null`  |
+| `allowed_arns` | List of principal ARNs that have access to the secret | list   | `null`  |
 
 ## Outputs
 
