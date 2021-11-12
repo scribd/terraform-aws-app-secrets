@@ -110,8 +110,9 @@ Releases are done from the `origin/main` branch using a manual step at the end o
 In order to create a new release:
 
 1. Merge / push changes to `origin/main`
-2. Open the `origin/main` [Jenkins CI/CD pipeline](https://jenkins.private.scribd.com/job/Service%20Foundations/job/terraform-aws-app-secrets/job/main/)
-3. Click "Proceed" button on the release step
+2. Open the `Release` [Github workflow](https://github.com/scribd/terraform-aws-app-secrets/actions/workflows/release.yml)
+3. Click `Run workflow` dropdown in the top right corner of the table listing the workflow runs
+4. Choose the `main` branch and click `Run workflow` button to start the process
 
 A version bump will happen automatically and the type of version bump
 (patch, minor, major) depends on the commits introduced since the last release.
