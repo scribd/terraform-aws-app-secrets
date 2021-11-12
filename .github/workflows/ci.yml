@@ -1,0 +1,29 @@
+name: CI
+
+on: push
+
+env:
+  DOCKER_CACHE_PATH: ${{ github.workspace }}/tmp/docker-cache
+  DOCKER_BUILDKIT: 1
+  BUILDX_CACHE_PATH: /tmp/.buildx-cache
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.7
+
+      - run: terraform init -input=false
+      - run: terraform fmt -check -diff -recursive
+
+      - run: terraform validate
+        env:
+          AWS_DEFAULT_REGION: "us-east-2"
+          TF_IN_AUTOMATION: "true"
