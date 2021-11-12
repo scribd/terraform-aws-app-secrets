@@ -1,3 +1,16 @@
+# [2.1.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.0.0...v2.1.0) (2021-11-12)
+
+
+### Bug Fixes
+
+* **ci:** Do not persist token when checking out the repository during Release workflow ([82c9b20](https://github.com/scribd/terraform-aws-app-secrets/commit/82c9b20898fdfb58187bdf778ca449b6bde654be))
+
+
+### Features
+
+* Add Github workflows to validate terraform and release ([e8134d3](https://github.com/scribd/terraform-aws-app-secrets/commit/e8134d3b48d50f2ddc37585ad91197512fd36c0e))
+* Remove Jenkinsfile ([2bb9b97](https://github.com/scribd/terraform-aws-app-secrets/commit/2bb9b97c439941f14a8d7f9a64c0625dc7b1a299))
+
 # [2.0.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v1.1.0...v2.0.0) (2021-10-13)
 
 
