@@ -7,3 +7,13 @@ output "all" {
     }
   ]
 }
+
+output "kms_key_arn" {
+  description = "The master key ARN"
+  value       = length(local.arns) > 0 ? aws_kms_key.master[0].arn : null
+}
+
+output "kms_alias_arn" {
+  description = "The master key alias ARN"
+  value       = length(local.arns) > 0 ? aws_kms_alias.master[0].arn : null
+}
