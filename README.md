@@ -7,6 +7,8 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 * [Table of contents](#table-of-contents)
 * [Prerequisites](#prerequisites)
 * [Example usage](#example-usage)
+  * [Single-account secrets](#single-account-secrets)
+  * [Cross-account secrets](#cross-account-secrets)
 * [Inputs](#inputs)
   * [Secrets](#secrets)
 * [Outputs](#outputs)
@@ -20,11 +22,15 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 
 ## Example usage
 
+### Single-account secrets
+
+This is a main use-case of the module. When you want to create application secrets that are not intended to be shared with other AWS accounts please refer to the following example:
+
 ```hcl
 module "secrets" {
   source = "git::ssh://git@github.com/scribd/terraform-aws-app-secrets.git?ref=main"
 
-  app_name = "go-chassis"
+  app_name = "project"
   secrets = [
     {
       name         = "app-env"
@@ -32,44 +38,170 @@ module "secrets" {
       allowed_arns = []
     },
     {
-      name         = "app-settings-name"
-      value        = "go-chassis"
-      allowed_arns = []
-    },
-    {
       name        = "app-database-host"
       value       = "[value required]"
-      allowed_arn = ["arn:aws:iam::1234567890:role/theirRole"]
+      allowed_arn = []
     },
     {
       name         = "app-database-port"
       value        = "3306"
-      allowed_arns = []
-    },
-    {
-      name         = "app-database-username"
-      value        = "[value required]"
-      allowed_arns = []
-    },
-    {
-      name         = "app-database-password"
-      value        = "[value required]"
-      allowed_arns = []
-    },
-    {
-      name         = "app-database-name"
-      value        = "[value required]"
       allowed_arns = []
     }
   ]
 
   tags = {
     department = "engineering"
-    project    = "go-chassis"
+    project    = "project"
     env        = "development"
   }
 }
 ```
+
+### Cross-account secrets
+
+The module allows you to [delegate](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_compare-resource-policies.html#aboutdelegation-resourcepolicy) read-only access to your secrets to other AWS accounts. Unfortunately, the configuration can't be fully provisioned by the module. It requires additional configuration in the AWS accounts where the secrets are requested from. Below you can find an example of sharing secrets with 2 different AWS accounts.
+
+1. Create secrets within an AWS account (in the example, we refer to it as `account_id1`) and specify AWS account ids or user ARNs that should have access to the secrets. The module generates [resource-based policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#policies_resource-based) which are attached to a secret (one policy per secret):
+
+```hcl
+module "secrets" {
+  source = "git::ssh://git@github.com/scribd/terraform-aws-app-secrets.git?ref=main"
+
+  app_name = "project"
+  secrets = [
+    {
+      name         = "app-env"
+      value        = "development"
+      allowed_arns = []
+    },
+    {
+      name         = "app-database-host"
+      value        = "[value required]"
+      allowed_arns = [var.account_id2]
+    },
+    {
+      name         = "app-database-port"
+      value        = "3306"
+      allowed_arns = [
+        var.account_id2,
+        "arn:aws:iam::${var.account_id3}:user/user-name",
+      ]
+    }
+  ]
+
+  tags = {
+    department = "engineering"
+    project    = "project"
+    env        = "development"
+  }
+}
+```
+
+The example above creates the secrets and grants access to the `app-database-host` secret to the `account_id2` AWS account. Access to the `app-database-port` secret is granted to the `account_id2` account and the `user-name` user defined in the `account_id3` AWS account. The `app-env` secret is not shared with any other AWS accounts.
+
+2. Run the terraform pipeline to provision the secrets and copy the KMS key ARN from the `module.secrets.kms_key_arn` output.
+
+3. In the `account_id2` AWS account, create the role `roleName` and attach a policy to it:
+
+```hcl
+data "aws_iam_policy_document" "secret_access" {
+  statement {
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+    ]
+
+    resources = ["kms-key-arn-copied-from-step-2"]
+  }
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+
+    resources = [
+      "arn:aws:secretsmanager:${var.aws_region}:${var.account_id1}:secret:project-app-database-host*",
+      "arn:aws:secretsmanager:${var.aws_region}:${var.account_id1}:secret:project-app-database-port*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "secret_access" {
+  name_prefix = "project"
+  description = "Policy to access secrets for application project"
+  policy      = data.aws_iam_policy_document.secret_access.json
+}
+
+module "iam_assumable_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+  version = "~> 4.8"
+
+  create_role = true
+
+  role_name         = "roleName"
+  role_requires_mfa = false
+
+  custom_role_policy_arns           = [aws_iam_policy.secret_access.arn]
+  number_of_custom_role_policy_arns = 1
+
+  tags = {
+    department = "engineering"
+    project    = "project"
+    env        = "development"
+  }
+}
+```
+
+Now you should be able to assume the role from within `account_id2` and read the secret value.
+
+> :warning: Note: As an example, we use a third-party module `iam-assumable-role` to create a new role. In your case, you may want to attach the newly created policy to an existing role.
+
+4. In the `account_id3` AWS account, create the user `user-name` and attach a policy to it:
+
+```hcl
+data "aws_iam_policy_document" "secret_access" {
+  statement {
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+    ]
+
+    resources = ["kms-key-arn-copied-from-step-2"]
+  }
+
+  statement {
+    actions   = ["secretsmanager:GetSecretValue"]
+    resources = ["arn:aws:secretsmanager:${var.aws_region}:${var.account_id1}:secret:project-app-database-port*"]
+  }
+}
+
+resource "aws_iam_policy" "secret_access" {
+  name_prefix = "project"
+  description = "Policy to access secrets for application project"
+  policy      = data.aws_iam_policy_document.secret_access.json
+}
+
+resource "aws_iam_user_policy_attachment" "user" {
+  user       = module.user.iam_user_name
+  policy_arn = aws_iam_policy.secret_access.arn
+}
+
+module "user" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-user"
+  version = "~> 4.8"
+
+  name = "user-name"
+
+  create_user                   = true
+  create_iam_user_login_profile = false
+
+  tags = {
+    department = "engineering"
+    project    = "project"
+    env        = "development"
+  }
+}
+```
+
+> ⚠️ Note: As an example, we use a third-party module `iam-user` to create a new user. In your case, you may want to attach the newly created policy to an existing user.
 
 > ⚠️ **IMPORTANT NOTES**
 >
@@ -95,9 +227,11 @@ module "secrets" {
 
 ## Outputs
 
-| Name | Description                              | Sensitive |
-| ---- | ---------------------------------------- | --------- |
-| all  | Map of names and arns of created secrets | no        |
+| Name            | Description                              | Sensitive |
+| --------------- | ---------------------------------------- | --------- |
+| `all`           | Map of names and arns of created secrets | no        |
+| `kms_key_arn`   | The master key ARN                       | no        |
+| `kms_alias_arn` | The master key alias ARN                 | no        |
 
 ## Release
 

@@ -20,6 +20,8 @@ resource "aws_secretsmanager_secret" "app" {
   name_prefix = "${var.app_name}-${each.key}"
   description = "The ${title(replace(each.key, "-", " "))} secret for ${var.app_name} application"
 
+  kms_key_id = length(local.arns) > 0 ? aws_kms_key.master[0].key_id : null
+
   policy = lookup(local.arns, each.key, null) == null ? null : data.aws_iam_policy_document.access[each.key].json
 
   tags = merge(var.tags, { "service" = var.app_name })
