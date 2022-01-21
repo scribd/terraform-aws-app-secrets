@@ -1,3 +1,11 @@
+# [2.2.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.1.0...v2.2.0) (2022-01-21)
+
+
+### Features
+
+* Create a KMS key for shareable secrets ([ba9e403](https://github.com/scribd/terraform-aws-app-secrets/commit/ba9e40372adb820d175eabb9e439508fbed6f30c))
+* Update outputs ([1da0850](https://github.com/scribd/terraform-aws-app-secrets/commit/1da0850c71ed0fcbc20091598047f1a5ff0a2e3a))
+
 # [2.1.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.0.0...v2.1.0) (2021-11-12)
 
 
