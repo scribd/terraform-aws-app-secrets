@@ -27,3 +27,8 @@ jobs:
         env:
           AWS_DEFAULT_REGION: "us-east-2"
           TF_IN_AUTOMATION: "true"
+
+  shared-workflow:
+    uses: scribd/github-actions-shared-workflows/.github/workflows/shared-workflow.yml@main
+    secrets:
+      github_access_token: ${{ secrets.SCRIBD_GITHUB_GENERIC_TOKEN }}
