@@ -27,3 +27,12 @@ jobs:
         env:
           AWS_DEFAULT_REGION: "us-east-2"
           TF_IN_AUTOMATION: "true"
+
+  codeowners:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: GitHub CODEOWNERS Validator
+        uses: mszostok/codeowners-validator@v0.7.1
+        with:
+          checks: "files,duppatterns,syntax"
