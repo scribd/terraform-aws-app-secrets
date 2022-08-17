@@ -11,14 +11,17 @@ jobs:
   validate:
     name: validate
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        activity: ["0.13.7", "0.14.11", "1.0.11"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup terraform
+      - name: Setup terraform ${{ matrix.activity }}
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.13.7
+          terraform_version: ${{ matrix.activity }}
 
       - run: terraform init -input=false
       - run: terraform fmt -check -diff -recursive

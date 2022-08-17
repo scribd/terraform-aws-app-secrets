@@ -17,7 +17,7 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 
 ## Prerequisites
 
-* [Terraform](https://www.terraform.io/downloads.html) (version `0.12.20` or higher)
+* [Terraform](https://www.terraform.io/downloads.html) (version `0.13.7` or higher)
 * [AWS provider](https://www.terraform.io/docs/providers/aws/) (version `2.60` or higher)
 
 ## Example usage
