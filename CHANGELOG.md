@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.2.0...v2.3.0) (2022-08-17)
+
+
+### Features
+
+* Bump min Terraform version to v0.13.7 ([331491e](https://github.com/scribd/terraform-aws-app-secrets/commit/331491ed130695d35a6463417a9b4ff9d5e3fba3))
+
 # [2.2.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.1.0...v2.2.0) (2022-01-21)
 
 
