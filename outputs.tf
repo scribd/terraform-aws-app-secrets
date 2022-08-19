@@ -6,6 +6,8 @@ output "all" {
       arn  = aws_secretsmanager_secret.app[name].id
     }
   ]
+
+  sensitive = true
 }
 
 output "kms_key_arn" {
