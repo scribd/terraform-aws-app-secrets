@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.3.0...v2.3.1) (2022-08-19)
+
+
+### Bug Fixes
+
+* Mark secret output as sensitive ([928d1e8](https://github.com/scribd/terraform-aws-app-secrets/commit/928d1e8bf39800d558e0ebe36ad87fb44f288b0c))
+
 # [2.3.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.2.0...v2.3.0) (2022-08-17)
 
 
