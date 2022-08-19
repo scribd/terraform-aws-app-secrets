@@ -229,7 +229,7 @@ module "user" {
 
 | Name            | Description                              | Sensitive |
 | --------------- | ---------------------------------------- | --------- |
-| `all`           | Map of names and arns of created secrets | no        |
+| `all`           | Map of names and arns of created secrets | yes       |
 | `kms_key_arn`   | The master key ARN                       | no        |
 | `kms_alias_arn` | The master key alias ARN                 | no        |
 
