@@ -1,3 +1,10 @@
+## [2.3.2](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.3.1...v2.3.2) (2023-03-13)
+
+
+### Bug Fixes
+
+* Test the semantic release upgrade ([dfa1b9e](https://github.com/scribd/terraform-aws-app-secrets/commit/dfa1b9e3e82581630d88a940bf86b03b3973f73f))
+
 ## [2.3.1](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.3.0...v2.3.1) (2022-08-19)
 
 
