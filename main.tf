@@ -18,7 +18,7 @@ resource "aws_secretsmanager_secret" "app" {
   for_each = local.secrets
 
   name_prefix = "${var.app_name}-${each.key}"
-  description = "The ${title(replace(each.key, "-", " "))} secret for ${var.app_name} application"
+  description = "The ${title(replace(each.key, "-", " "))} secret for the ${var.app_name} application"
 
   kms_key_id = length(local.arns) > 0 ? aws_kms_key.master[0].key_id : null
 

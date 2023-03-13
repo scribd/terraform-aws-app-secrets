@@ -2,6 +2,7 @@ preset: "angular"
 
 branches:
   - main
+  - vadimka/bump-semantic-release
 
 plugins:
   - "@semantic-release/commit-analyzer"
