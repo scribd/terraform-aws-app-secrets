@@ -10,7 +10,7 @@ env:
 jobs:
   validate:
     name: validate
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         activity: ["0.13.7", "0.14.11", "1.0.11"]
@@ -32,7 +32,7 @@ jobs:
           TF_IN_AUTOMATION: "true"
 
   codeowners:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: GitHub CODEOWNERS Validator
