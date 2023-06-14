@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup terraform ${{ matrix.activity }}
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ matrix.activity }}
 
