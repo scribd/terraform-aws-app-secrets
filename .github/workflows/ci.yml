@@ -16,7 +16,7 @@ jobs:
         activity: ["0.13.7", "0.14.11", "1.0.11"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup terraform ${{ matrix.activity }}
         uses: hashicorp/setup-terraform@v2
@@ -34,7 +34,7 @@ jobs:
   codeowners:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: GitHub CODEOWNERS Validator
         uses: mszostok/codeowners-validator@v0.7.1
         with:
