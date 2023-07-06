@@ -1,0 +1,24 @@
+name: PR Check
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+jobs:
+  check-commit-message:
+    name: Check Commit Message
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check Commit Message
+        uses: gsactions/commit-message-checker@v2
+        with:
+          pattern: '^(?:ci|feat|fix|docs|style|refactor|perf|test|chore)\(?(?:\w+|\s|\-|_)?\)?:\s\w+'
+          error: "One or more commit messages do not meet the format requirements. Please check the requirements here: https://github.com/scribd/terraform-aws-app-secrets#release"
+          accessToken: ${{ secrets.SCRIBD_GITHUB_RELEASE_TOKEN }}
+          excludeTitle: true
+          excludeDescription: true
+          checkAllCommitMessages: true
