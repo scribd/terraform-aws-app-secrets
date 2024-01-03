@@ -17,7 +17,7 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 
 ## Prerequisites
 
-* [Terraform](https://www.terraform.io/downloads.html) (version `0.13.7` or higher)
+* [Terraform](https://www.terraform.io/downloads.html) (version `1.0.0` or higher)
 * [AWS provider](https://www.terraform.io/docs/providers/aws/) (version `2.60` or higher)
 
 ## Example usage
@@ -210,17 +210,17 @@ module "user" {
 
 ## Inputs
 
-| Name         | Description                            | Type         | Default     | Required  |
-| ------------ | -------------------------------------- | ------------ | ----------- | --------- |
-| `app_name`   | Application name                       | string       | `null`      | yes       |
-| `aws_region` | AWS region                             | string       | `us-east-2` | no        |
-| `secrets`    | List of objects of [secrets](#secrets) | list(object) | `null`      | yes       |
-| `tags`       | Key-value map of tags                  | map(string)  | `{}`        | no        |
+| Name         | Description                            | Type         | Default     | Required |
+|:-------------|:---------------------------------------|:-------------|:------------|:---------|
+| `app_name`   | Application name                       | string       | `null`      | yes      |
+| `aws_region` | AWS region                             | string       | `us-east-2` | no       |
+| `secrets`    | List of objects of [secrets](#secrets) | list(object) | `null`      | yes      |
+| `tags`       | Key-value map of tags                  | map(string)  | `{}`        | no       |
 
 ### Secrets
 
 | Name           | Description                                           | Type   | Default |
-| -------------- | ----------------------------------------------------- | ------ | ------- |
+|:---------------|:------------------------------------------------------|:-------|:--------|
 | `name`         | Secret name                                           | string | `null`  |
 | `value`        | Secret value                                          | string | `null`  |
 | `allowed_arns` | List of principal ARNs that have access to the secret | list   | `null`  |
@@ -228,7 +228,7 @@ module "user" {
 ## Outputs
 
 | Name            | Description                              | Sensitive |
-| --------------- | ---------------------------------------- | --------- |
+|:----------------|:-----------------------------------------|:----------|
 | `all`           | Map of names and arns of created secrets | yes       |
 | `kms_key_arn`   | The master key ARN                       | no        |
 | `kms_alias_arn` | The master key alias ARN                 | no        |
