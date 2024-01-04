@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.3.1...v3.0.0) (2024-01-04)
+
+
+### chore
+
+* Bump min supported TF to v1.0.0 ([b52520f](https://github.com/scribd/terraform-aws-app-secrets/commit/b52520f2abdc739a56457ddf1fc2d117d3b8d21f))
+
+
+### BREAKING CHANGES
+
+* Drop support for Terraform 0.13 and 0.14
+
 ## [2.3.1](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.3.0...v2.3.1) (2022-08-19)
 
 
