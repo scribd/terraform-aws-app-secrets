@@ -11,6 +11,7 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
   * [Cross-account secrets](#cross-account-secrets)
 * [Inputs](#inputs)
   * [Secrets](#secrets)
+  * [Recovery window](#recovery-window)
 * [Outputs](#outputs)
 * [Release](#release)
 * [Maintainers](#maintainers)
@@ -210,12 +211,13 @@ module "user" {
 
 ## Inputs
 
-| Name         | Description                            | Type         | Default     | Required |
-|:-------------|:---------------------------------------|:-------------|:------------|:---------|
-| `app_name`   | Application name                       | string       | `null`      | yes      |
-| `aws_region` | AWS region                             | string       | `us-east-2` | no       |
-| `secrets`    | List of objects of [secrets](#secrets) | list(object) | `null`      | yes      |
-| `tags`       | Key-value map of tags                  | map(string)  | `{}`        | no       |
+| Name         | Description                                                       | Type         | Default     | Required |
+|:-------------|:------------------------------------------------------------------|:-------------|:------------|:---------|
+| `app_name`   | Application name                                                  | string       | `null`      | yes      |
+| `aws_region` | AWS region                                                        | string       | `us-east-2` | no       |
+| `secrets`    | List of objects of [secrets](#secrets)                            | list(object) | `null`      | yes      |
+| `delete_in`  | [Number of days](#recovery-window) to wait before secret deletion | number       | `30`        | no       |
+| `tags`       | Key-value map of tags                                             | map(string)  | `{}`        | no       |
 
 ### Secrets
 
@@ -224,6 +226,10 @@ module "user" {
 | `name`         | Secret name                                           | string | `null`  |
 | `value`        | Secret value                                          | string | `null`  |
 | `allowed_arns` | List of principal ARNs that have access to the secret | list   | `null`  |
+
+### Recovery window
+
+Number of days that AWS Secrets Manager waits before it can delete the secret. This value can be `0` to force deletion without recovery or range from `7` to `30` days. The default value is `30`.
 
 ## Outputs
 
