@@ -28,7 +28,7 @@ variable "delete_in" {
   default = 30
 
   validation {
-    condition     = var.delete_in == 0 || contains(range(7, 30), var.delete_in)
+    condition     = var.delete_in == 0 || contains(range(7, 31), var.delete_in)
     error_message = "The delete_in value must be 0 or between 7 and 30."
   }
 }
