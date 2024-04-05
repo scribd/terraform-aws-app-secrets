@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/scribd/terraform-aws-app-secrets/compare/v3.1.0...v3.1.1) (2024-04-05)
+
+
+### Bug Fixes
+
+* Include 30 to the day range ([51db3d2](https://github.com/scribd/terraform-aws-app-secrets/commit/51db3d2ccd319945cc49a33f0411b52afc185eee))
+
 # [3.1.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v3.0.0...v3.1.0) (2024-04-05)
 
 
