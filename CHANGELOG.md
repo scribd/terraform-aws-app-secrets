@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v3.0.0...v3.1.0) (2024-04-05)
+
+
+### Features
+
+* Add delete_in argument ([555d9db](https://github.com/scribd/terraform-aws-app-secrets/commit/555d9db14d884ad4bb4b360deb75204287d16d07))
+
 # [3.0.0](https://github.com/scribd/terraform-aws-app-secrets/compare/v2.3.1...v3.0.0) (2024-01-04)
 
 
