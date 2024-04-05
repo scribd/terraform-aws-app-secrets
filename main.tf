@@ -24,6 +24,8 @@ resource "aws_secretsmanager_secret" "app" {
 
   policy = lookup(local.arns, each.key, null) == null ? null : data.aws_iam_policy_document.access[each.key].json
 
+  recovery_window_in_days = var.delete_in
+
   tags = merge(var.tags, { "service" = var.app_name })
 }
 
