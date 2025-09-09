@@ -1,0 +1,248 @@
+---
+description: Git commit guidelines to ensure consistent and error-free commits
+globs:
+---
+
+# Git Commit Guidelines
+
+## Commit Message Format
+
+### Structure
+
+The commit message should be structured as follows:
+  ```
+  <type>[optional scope]: <description>
+
+  [optional body]
+
+  [optional footer(s)]
+  ```
+
+### Types
+
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation
+- `style`: Formatting
+- `refactor`: Code restructuring
+- `test`: Test changes
+- `chore`: Maintenance
+
+## Specification
+
+- Commits MUST be prefixed with a type, which consists of a noun, feat, fix, etc., followed by the OPTIONAL scope, OPTIONAL !, and REQUIRED terminal colon and space.
+- The type feat MUST be used when a commit adds a new feature to your application or library.
+- The type fix MUST be used when a commit represents a bug fix for your application.
+- A scope MAY be provided after a type. A scope MUST consist of a noun describing a section of the codebase surrounded by parenthesis, e.g., fix(parser):
+- A description MUST immediately follow the colon and space after the type/scope prefix. The description is a short summary of the code changes, e.g., fix: array parsing issue when multiple spaces were contained in string.
+- A longer commit body MAY be provided after the short description, providing additional contextual information about the code changes. The body MUST begin one blank line after the description.
+- A commit body is free-form and MAY consist of any number of newline separated paragraphs.
+- One or more footers MAY be provided one blank line after the body. Each footer MUST consist of a word token, followed by either a :<space> or <space># separator, followed by a string value (this is inspired by the git trailer convention).
+- A footer’s token MUST use - in place of whitespace characters, e.g., Acked-by (this helps differentiate the footer section from a multi-paragraph body). An exception is made for BREAKING CHANGE, which MAY also be used as a token.
+- A footer’s value MAY contain spaces and newlines, and parsing MUST terminate when the next valid footer token/separator pair is observed.
+- Breaking changes MUST be indicated in the type/scope prefix of a commit, or as an entry in the footer.
+- If included as a footer, a breaking change MUST consist of the uppercase text BREAKING CHANGE, followed by a colon, space, and description, e.g., BREAKING CHANGE: environment variables now take precedence over config files.
+- If included in the type/scope prefix, breaking changes MUST be indicated by a ! immediately before the :. If ! is used, BREAKING CHANGE: MAY be omitted from the footer section, and the commit description SHALL be used to describe the breaking change.
+- Types other than feat and fix MAY be used in your commit messages, e.g., docs: update ref docs.
+- The units of information that make up Conventional Commits MUST NOT be treated as case sensitive by implementors, with the exception of BREAKING CHANGE which MUST be uppercase.
+BREAKING-CHANGE MUST be synonymous with BREAKING CHANGE, when used as a token in a footer.
+
+## Error Prevention
+
+### ✅ CORRECT Patterns
+
+- Commit message with description and breaking change footer:
+  ```bash
+  git commit -m 'feat: allow provided config object to extend other configs' -m 'BREAKING CHANGE: `extends` key in config file is now used for extending other config files'
+  ```
+
+- Commit message with ! to draw attention to breaking change:
+  ```bash
+  git commit -m "feat!: send an email to the customer when a product is shipped"
+  ```
+
+- Commit message with scope and ! to draw attention to breaking change
+  ```bash
+  git commit -m "feat(api)!: send an email to the customer when a product is shipped"
+  ```
+
+- Commit message with both ! and BREAKING CHANGE footer:
+  ```bash
+  git commit -m "chore!: drop support for Node 6" -m "BREAKING CHANGE: use JavaScript features not available in Node 6."
+  ```
+
+- Commit message with no body:
+  ```bash
+  git commit -m "docs: correct spelling of CHANGELOG"
+  ```
+
+- Commit message with scope:
+  ```bash
+  git commit -m "feat(lang): add Polish language"
+  ```
+
+- Commit message with multi-paragraph body and multiple footers:
+  ```bash
+  git commit -m "fix: prevent racing of requests
+
+  Introduce a request id and a reference to latest request. Dismiss
+  incoming responses other than from latest request.
+
+  Remove timeouts which were used to mitigate the racing issue but are
+  obsolete now.
+
+  Reviewed-by: Z
+  Refs: #123"
+  ```
+
+### ❌ INCORRECT Patterns
+
+  ```bash
+  # No prefix used
+  git commit -m "Add code"
+  ```
+
+## Best Practices
+
+### Message Guidelines
+
+1. Use one of the message types from the list of the provided above types
+2. Use imperative mood ("add" not "adds")
+3. Keep first line under 50 characters
+4. No period at end of subject line
+5. Be specific and clear
+6. Reference issue numbers when relevant
+
+### Commit Organization
+
+1. Make atomic commits (one logical change)
+2. Verify changes before committing
+3. Run tests before pushing
+4. Review the diff before committing
+5. Keep commits focused and small
+
+## Common Patterns
+
+### Feature Work
+
+  ```bash
+  git commit -m "feat(user): add email verification"
+  git commit -m "feat(auth): implement 2FA support"
+  ```
+
+### Bug Fixes
+
+  ```bash
+  git commit -m "fix(api): resolve rate limiting issue"
+  git commit -m "fix(ui): correct button alignment"
+  ```
+
+### Documentation
+
+  ```bash
+  git commit -m "docs(api): update endpoint documentation"
+  git commit -m "docs(setup): add deployment guide"
+  ```
+
+### Refactoring
+
+  ```bash
+  git commit -m "refactor(core): optimize data processing"
+  git commit -m "refactor(auth): simplify login flow"
+  ```
+
+## Recovery Procedures
+
+### Fix Last Commit
+
+  ```bash
+  # Amend commit message
+  git commit --amend -m "type(scope): corrected message"
+
+  # Amend commit content
+  git add forgotten-file
+  git commit --amend --no-edit
+  ```
+
+### Split Failed Commit
+
+  ```bash
+  # Reset last commit
+  git reset HEAD~1
+
+  # Commit changes separately
+  git add feature-files
+  git commit -m "feat(scope): first part"
+  git add test-files
+  git commit -m "test(scope): add tests"
+  ```
+
+## Pre-commit Checklist
+
+### Code Quality
+
+- Run linters
+- Check formatting
+- Remove debug code
+- Run tests
+
+### Security
+
+- No sensitive data
+- No API keys
+- No credentials
+- Check file permissions
+
+### Commit Message
+
+- Correct type and scope
+- Clear description
+- Reference issues if applicable
+
+### Changes
+
+- Review diff
+- Verify file inclusions
+- Check for unintended changes
+- Confirm test coverage
+
+### Mandatory Diff Review
+
+#### Pre-Commit Diff Check
+
+Before any commit, ALWAYS run:
+
+  ```bash
+  # Check status first
+  git status | cat
+
+  # Then review changes in detail
+  git diff | cat
+
+  # For staged changes
+  git diff --staged | cat
+  ```
+
+#### Diff Review Checklist
+
+1. File Changes
+  - Confirm all intended files are modified
+  - No unintended file deletions
+  - No sensitive files exposed
+
+2. Code Changes
+  - Review each chunk of changes
+  - Verify line deletions are intentional
+  - Check for debugging code
+  - Confirm formatting changes
+
+3. Large Changes Warning
+  - If more than 500 lines changed, break into smaller commits
+  - For large deletions, double-check necessity
+  - Request confirmation for significant file removals
+
+4. Post-Review Actions
+  - Address any unintended changes
+  - Remove debug statements
+  - Fix formatting issues
+  - Split into multiple commits if needed
