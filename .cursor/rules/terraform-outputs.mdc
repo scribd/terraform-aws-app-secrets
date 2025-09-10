@@ -1,0 +1,82 @@
+---
+description: Terraform output rules
+globs: *.tf
+alwaysApply: false
+---
+
+# Terraform module outputs
+
+- Organize all outputs in an outputs.tf file.
+- Don’t use any shortcuts for the filename, such as out.tf, outs.tf.
+- Provide meaningful descriptions for all outputs:
+
+  ```hcl
+  # ✅ Good example
+
+  output "ecr_repository_name" {
+    description = "ECR Repository name"
+    value       = module.ecr.ecr_repository_name
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  output "ecr_repository_name" {
+    value = var.ecr_repository_name
+  }
+  ```
+
+- The description of an output must always begin with a capital letter:
+
+  ```hcl
+  # ✅ Good example
+
+  output "ecr_repository_name" {
+    description = "ECR Repository name"
+    value       = module.ecr.ecr_repository_name
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  output "ecr_repository_name" {
+    description = "ecr repository name"
+    value       = module.ecr.ecr_repository_name
+  }
+  ```
+
+- Document output descriptions in the README.md file.
+- Output all useful values that root modules might need to refer to or share. Especially for heavily used modules, expose all outputs that have the potential for consumption.
+- Don't pass outputs directly through input variables if possible, because doing so prevents them from being properly added to the dependency graph. To ensure that implicit dependencies are created, make sure that outputs reference attributes from resources. Instead of referencing an input variable for an instance directly, pass the attribute through as shown here:
+
+  ```hcl
+  # ✅ Good example
+
+  output "ecr_repository_name" {
+    description = "ECR Repository name"
+    value       = module.ecr.ecr_repository_name
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  output "ecr_repository_name" {
+    description = "ECR Repository name"
+    value       = var.ecr_repository_name
+  }
+  ```
+
+- When exporting sensitive values to output, make sure that the values are marked as sensitive:
+
+  ```hcl
+  # ✅ Good example
+
+  output "ecr_repository_name" {
+    description = "ECR Repository name"
+    value       = module.ecr.ecr_repository_name
+    sensitive   = true
+  }
+  ```

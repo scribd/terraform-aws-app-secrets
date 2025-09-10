@@ -1,0 +1,116 @@
+---
+description: Terraform input variables
+globs: *.tf
+alwaysApply: false
+---
+
+# Terraform module input variables
+
+- Declare all input variables in variables.tf.
+- Don’t use any shortcuts for the filename, such as var.tf, vars.tf.
+- Give variables descriptive names that are relevant to their usage or purpose:
+  - To simplify conditional logic, give boolean variables positive names - for example, external_access_enabled.
+- Variables must have descriptions. Try to keep the description short. Document possible caveats and edge cases separately in the README.md file of the module:
+
+  ```hcl
+  # ✅ Good example
+
+  variable "ecs_memory" {
+    description = "Memory units for the ECS task"
+    type        = string
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  variable "ecs_memory" {
+    description = "Memory Units for the ECS task (8192 = 8GB, 8192 is the minimum for 4 vCPU). In general this should be: max memory for the instance / (expected # ECS tasks * memory per task) - reserved system memory.  This way, EC2 instance will have enough reserved memory to do a rolling restart for the required number of tasks."
+    type        = string
+  }
+  ```
+
+- The description of a variable must always begin with a capital letter:
+
+  ```hcl
+  # ✅ Good example
+
+  variable "ecs_memory" {
+    description = "Memory units for the ECS task"
+    type        = string
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  variable "ecs_memory" {
+    description = "memory units for the ECS task"
+    type        = string
+  }
+  ```
+
+- Document variable descriptions in the README.md file.
+- Give variables defined types:
+
+  ```hcl
+  # ✅ Good example
+
+  variable "ecs_memory" {
+    description = "Memory units for the ECS task"
+    type        = string
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  variable "ecs_memory" {
+    description = "Memory units for the ECS task"
+  }
+  ```
+
+- When appropriate, provide default values:
+  - For variables that have environment-independent values (such as disk size), provide default values.
+  - For variables that have environment-specific values (such as project_id), don't provide default values. This way, the calling module must provide meaningful values.
+- Use empty defaults for variables (like empty strings or lists) only when leaving the variable empty is a valid preference that the underlying APIs don't reject.
+- When appropriate, make sure that the values are marked as sensitive to prevent Terraform from showing its value in the plan or apply output.
+- Organize the variable arguments in the following order: description, type, sensitive, default, and validation. The validation argument must be split by an empty line from other ones. It ensures the variable naming is consistent. It also increases the readability of the code:
+
+  ```hcl
+  # ✅ Good example
+
+  variable "ecs_memory" {
+    description = "Memory units for the ECS task"
+    type        = string
+    sensitive   = false
+    default     = "8GB"
+
+    validation {
+      condition     = contains(["1GB", "2GB", "4GB", "8GB"], var.ecs_memory)
+      error_message = "The ecs_memory must be either 1GB, 2GB, 4GB, or 8GB."
+    }
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  variable "ecs_memory" {
+    default = "8GB"
+    description = "Memory units for the ECS task"
+    type = string
+    sensitive = false
+    validation {
+      condition     = contains(["1GB", "2GB", "4GB", "8GB"], var.ecs_memory)
+      error_message = "The ecs_memory must be either 1GB, 2GB, 4GB, or 8GB."
+    }
+  }
+  ```
+
+- Be judicious in your use of variables. Only parameterize values that must vary for each instance or environment. When deciding whether to expose a variable, ensure that you have a concrete use case for changing that variable. If there's only a small chance that a variable might be needed, don't expose it.
+  - Adding a variable with a default value is backward-compatible.
+  - Removing a variable is backward-incompatible.
+  - In cases where a literal is reused in multiple places, you can use a local value without exposing it as a variable.
+- If you have a variable to enable/disable the module, it must be called enabled and has to be defined as the very first variable on the list of input variables.
+- If you have a variable to assign tags to your resources, it must be called tags and has to be defined as the very last variable on the list of input variables.

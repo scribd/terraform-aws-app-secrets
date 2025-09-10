@@ -1,0 +1,71 @@
+---
+description: General Terraform style and structure
+globs: *.tf
+alwaysApply: false
+---
+
+# Standard Terraform module structure
+
+- Terraform modules must follow the standard module structure:
+
+    ├── charts/
+    ├── config/
+    │   ├── development/
+    │   │   ├── backend.tf # Development environment backend config
+    │   │   └── terraform.tfvars # Environment-specific values
+    │   ├── staging/
+    │   │   ├── backend.tf # Staging environment backend config
+    │   │   └── terraform.tfvars # Environment-specific values
+    │   ├── production/
+    │   │   ├── backend.tf # Production environment backend config
+    │   │   └── terraform.tfvars # Environment-specific values
+    ├── docs/
+    ├── files/
+    ├── modules/
+    ├── scripts/
+    ├── templates/
+    ├── locals.tf # Module local variables
+    ├── main.tf # Top-level resources (if any)
+    ├── variables.tf # Global variables
+    ├── versions.tf # Terraform and provider versions
+    └── outputs.tf # Global outputs
+
+- Usually, the standard module structure looks like this:
+  - locals.tf - contains local variables used in the module
+  - main.tf - call modules and data sources to create all resources
+  - outputs.tf - returns results to the calling module
+  - variables.tf - contains declarations of module variables used in main.tf
+  - versions.tf - contains version requirements for Terraform and providers
+- Start every module with a main.tf file, where resources are located by default.
+- In every module, include a README.md file in Markdown format. In the README.md file, include basic documentation about the module.
+- Place examples in an examples/ folder, with a separate subdirectory for each example. For each example, include a detailed README.md file.
+- Create logical groupings of resources with their files and descriptive names, such as networks.tf, instances.tf, or loadbalancers.tf. Prefer a plural form of nouns for the filenames.
+- Avoid giving every resource its own file. Group resources by their shared purpose.
+- Name files using dashes to delimit multiple words (no underscores).
+- In the module's root directory, include only Terraform (*.tf) and repository metadata files (such as README.md and CHANGELOG.md).
+- Place any additional documentation in a docs/ subdirectory if necessary.
+
+## Data sources
+
+- Put data sources next to the resources that reference them. For example, if you are fetching an image to be used in launching an instance, place it alongside the instance instead of collecting data resources in a separate file.
+- Only when the number of data sources becomes large, consider moving them to dedicated data.tf file.
+- To fetch data relative to the current environment, use variable or resource interpolation.
+
+## Custom scripts
+
+- Use scripts only when necessary. The state of resources created through scripts is not accounted for or managed by Terraform.
+- Avoid custom scripts, if possible. Use them only when Terraform resources don't support the desired behavior.
+- Any custom scripts used must have a documented reason for existing and ideally a deprecation plan.
+- Put custom scripts called by Terraform in a scripts/ directory.
+
+## Static files and templates
+
+- Static files that Terraform references but doesn't execute (such as startup scripts loaded onto EC2 instances) must be organized into a files/ directory.
+- Place lengthy HereDocs in external files, separate from their HCL. Reference them with the file() function.
+- For files that are read in by using the Terraform templatefile function, use the file extension .tmpl.
+- Templates must be placed in a templates/ directory.
+
+## Helm charts
+
+- Helm charts must follow the standard chart structure.
+- Put custom Helm charts called by Terraform in a charts/ directory.

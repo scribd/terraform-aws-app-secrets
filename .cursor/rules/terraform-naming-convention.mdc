@@ -1,0 +1,122 @@
+---
+description: Terraform module naming convention
+globs: *.tf
+alwaysApply: false
+---
+
+# Terraform naming convention
+
+- Name all configuration objects using underscores to delimit multiple words (no dashes). This practice ensures consistency with the naming convention for resource types, data source types, and other predefined values. This convention does not apply to name arguments.
+
+  ```hcl
+  # ✅ Good example
+
+  resource "aws_acm_certificate" "internal_gateway" {
+    domain_name = "mesh.scribd.com"
+    ...
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  resource "aws_acm_certificate" "internal-gateway" {
+    domain_name = "mesh.scribd.com"
+    ...
+  }
+  ```
+
+- To differentiate resources of the same type from each other (for example, primary and secondary), provide meaningful resource names.
+- Make resource names singular.
+- In the resource name, don't repeat the resource type. For example:
+
+  ```hcl
+  # ✅ Good example
+
+  resource "aws_secretsmanager_secret" "datadog_api_key" { ... }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  resource "aws_secretsmanager_secret" "datadog_api_key_secretsmanager_secret" { … }
+  ```
+
+- Place the argument count or for_each, if required, as the very first argument. The argument should be separated by a single empty line:
+
+  ```hcl
+  # ✅ Good examples
+
+  resource "aws_s3_bucket" "assets" {
+    count = 2
+
+    bucket = "scribd-assets-${var.environment}-${count.index}"
+  }
+
+  resource "aws_s3_bucket" "static_files" {
+    for_each = local.static_buckets
+
+    bucket = each.key
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Examples
+
+  resource "aws_s3_bucket" "assets" {
+    count  = 2
+    bucket = "scribd-assets-${var.environment}-${count.index}"
+  }
+
+  resource "aws_s3_bucket" "javascripts" {
+    bucket = "scribd-javascripts-${var.environment}-${count.index}"
+    count  = 2
+  }
+
+  resource "aws_s3_bucket" "static_files" {
+    for_each = local.static_buckets
+    bucket   = each.key
+  }
+  ```
+
+- Place the argument tags, if supported by resource, as the last real argument, followed by depends_on and lifecycle, if necessary. All of these should be separated by a single empty line:
+
+  ```hcl
+  # ✅ Good example
+
+  resource "aws_s3_bucket" "assets" {
+    bucket = "scribd-assets-${var.environment}"
+
+    tags = {
+      department  = "service-foundations"
+      environment = var.environment
+    }
+
+    depends_on = [aws_internet_gateway.main]
+
+    lifecycle {
+      create_before_destroy = true
+    }
+  }
+  ```
+
+  ```hcl
+  # ❌ Bad Example
+
+  resource "aws_s3_bucket" "assets" {
+    bucket = "scribd-assets-${var.environment}"
+
+    tags = {
+      department  = "service-foundations"
+      environment = var.environment
+    }
+
+    force_destroy = true
+
+    depends_on = [aws_internet_gateway.main]
+
+    lifecycle {
+      create_before_destroy = true
+    }
+  }
+  ```
