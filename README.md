@@ -19,7 +19,7 @@ A module to create application secrets stored in [AWS Secrets Manager](https://a
 ## Prerequisites
 
 * [Terraform](https://www.terraform.io/downloads.html) (version `1.0.0` or higher)
-* [AWS provider](https://www.terraform.io/docs/providers/aws/) (version `2.60` or higher)
+* [AWS provider](https://www.terraform.io/docs/providers/aws/) (version `5.0` or higher)
 
 ## Example usage
 
@@ -233,11 +233,37 @@ Number of days that AWS Secrets Manager waits before it can delete the secret. T
 
 ## Outputs
 
-| Name            | Description                              | Sensitive |
-|:----------------|:-----------------------------------------|:----------|
-| `all`           | Map of names and arns of created secrets | yes       |
-| `kms_key_arn`   | The master key ARN                       | no        |
-| `kms_alias_arn` | The master key alias ARN                 | no        |
+| Name            | Description                    | Sensitive |
+|:----------------|:-------------------------------|:----------|
+| `all`           | Get a list of created secrets  | no        |
+| `get`           | Get a map of created secrets   | no        |
+| `kms_key_arn`   | The master key ARN             | no        |
+| `kms_alias_arn` | The master key alias ARN       | no        |
+
+The `all` output is a list of objects, one per secret, where `name` is the
+upper-cased secret name with dashes replaced by underscores:
+
+```hcl
+[
+  {
+    name = "APP_DATABASE_HOST"
+    arn  = "arn:aws:secretsmanager:us-east-2:000000000000:secret:project-app-database-host-AbCdEf"
+  }
+]
+```
+
+The `get` output maps each secret's original name to its ARN, which lets you
+address a single secret without filtering the list:
+
+```hcl
+{
+  "app-database-host" = "arn:aws:secretsmanager:us-east-2:000000000000:secret:project-app-database-host-AbCdEf"
+}
+```
+
+Neither output exposes the secret values themselves, so neither is marked
+`sensitive`. Both can be used anywhere a sensitive value would be rejected,
+such as a `for_each` or a resource name.
 
 ## Release
 

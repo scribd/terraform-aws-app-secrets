@@ -1,13 +1,19 @@
 output "all" {
-  description = "Map of names and arns of created secrets"
+  description = "Get a list of created secrets"
   value = [
     for name in keys(local.secrets) : {
       name = upper(replace(name, "-", "_"))
-      arn  = aws_secretsmanager_secret.app[name].id
+      arn  = aws_secretsmanager_secret.app[name].arn
     }
   ]
+}
 
-  sensitive = true
+output "get" {
+  description = "Get a map of created secrets"
+  value = {
+    for name in keys(local.secrets) :
+    name => aws_secretsmanager_secret.app[name].arn
+  }
 }
 
 output "kms_key_arn" {
